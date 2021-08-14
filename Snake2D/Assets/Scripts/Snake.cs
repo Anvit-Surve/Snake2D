@@ -27,14 +27,13 @@ public class Snake : MonoBehaviour
     private int snakeBodySize;
     private List<SnakeMovePosition> snakeMovePositionList;
     private List<SnakeBodyPart> snakeBodyPartList;
-    //public float speed;
     public void Setup(LevelGrid levelGrid)
     {
         this.levelGrid = levelGrid;
     }
     private void Awake()
     {
-        gridPosition = new Vector2Int(25, 25);
+        gridPosition = new Vector2Int(10, 10);
         gridMoveTimerMax = 1f;
         gridMoveTimer = gridMoveTimerMax;
         gridMoveDirection = Direction.Right;
@@ -109,6 +108,7 @@ public class Snake : MonoBehaviour
                 if (gridPosition == snakeBodyPartGridPosition)
                 {
                     state = State.Dead;
+                    GameHandler.SnakeDied();
                 }
             }
             transform.position = new Vector3(gridPosition.x, gridPosition.y);
