@@ -25,19 +25,40 @@ public class LevelGrid
         do
         {
             foodGridPosition = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
-        } while (snake.GetGridPosition() == foodGridPosition);
+        } while (snake.GetFullSnakeGridPositionList().IndexOf(foodGridPosition) != -1);
         
         foodGameObject = new GameObject("Food", typeof(SpriteRenderer));
         foodGameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.i.foodSprite;
         foodGameObject.transform.position = new Vector3(foodGridPosition.x, foodGridPosition.y);
-        foodGameObject.transform.localScale = new Vector3(4, 4);
     }
-    public void SnakeMoved(Vector2Int snakeGridPosition)
+    public bool TrySnakeEatFood(Vector2Int snakeGridPosition)
     {
         if (snakeGridPosition == foodGridPosition)
         {
             Object.Destroy(foodGameObject);
             SpawnFood();
+            return true;
         }
+        else { return false; }
+    }
+    public Vector2Int ValidateGridPosition(Vector2Int gridPosition)
+    {
+        if(gridPosition.x < 0)
+        {
+            gridPosition.x = width;
+        }
+        if(gridPosition.x > width)
+        {
+            gridPosition.x = 0;
+        }
+        if (gridPosition.y < 0)
+        {
+            gridPosition.y = height;
+        }
+        if (gridPosition.y > height)
+        {
+            gridPosition.y = 0;
+        }
+        return gridPosition;
     }
 }

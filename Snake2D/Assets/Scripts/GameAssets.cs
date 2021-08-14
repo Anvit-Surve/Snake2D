@@ -6,6 +6,7 @@ public class GameAssets : MonoBehaviour
 {
     public static GameAssets i;
     public Sprite snakeHeadSprite;
+    public Sprite snakeBodySprite;
     public Sprite foodSprite;
 
     private void Awake()
@@ -13,5 +14,4 @@ public class GameAssets : MonoBehaviour
         i = this;
     }
 
-    
 }

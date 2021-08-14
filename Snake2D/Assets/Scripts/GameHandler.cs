@@ -9,7 +9,7 @@ public class GameHandler : MonoBehaviour
     private LevelGrid levelGrid;
     void Start()
     {
-        levelGrid = new LevelGrid(80, 80);
+        levelGrid = new LevelGrid(50, 50);
         snake.Setup(levelGrid);
         levelGrid.Setup(snake);
     }
