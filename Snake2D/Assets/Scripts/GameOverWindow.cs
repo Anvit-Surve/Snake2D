@@ -10,24 +10,28 @@ public class GameOverWindow : MonoBehaviour
     public Button buttonRetry;
     private void Awake()
     {
-        instance = this;
+        instance =  this;
         buttonRetry.onClick.AddListener(RetryGame);
         Hide();
     }
     private void RetryGame()
     {
+        SoundManager.PlaySound(SoundManager.Sound.ButtonClick);
         Loader.Load(Loader.Scene.GameScene);
     }
-    private void Show()
+    private void Show(bool isNewHighScore)
     {
         gameObject.SetActive(true);
+        transform.Find("newhighscoretext").gameObject.SetActive(isNewHighScore);
+        transform.Find("scoreText").GetComponent<TextMeshProUGUI>().text = HighScore.GetScore().ToString();
+        transform.Find("highscoreText").GetComponent<TextMeshProUGUI>().text = "HIGHSCORE " + HighScore.GetHighscore();
     }
     private void Hide()
     {
         gameObject.SetActive(false);
     }
-    public static void ShowStatic()
+    public static void ShowStatic(bool isNewHighScore)
     {
-        instance.Show();
+        instance.Show(isNewHighScore);
     }
 }

@@ -61,6 +61,7 @@ public class Snake : MonoBehaviour
         if (gridMoveTimer >= gridMoveTimerMax)
         {
             gridMoveTimer -= gridMoveTimerMax;
+            SoundManager.PlaySound(SoundManager.Sound.SnakeMove);
             SnakeMovePosition previousSnakeMovePosition = null;
             if (snakeMovePositionList.Count > 0)
             {
@@ -90,10 +91,18 @@ public class Snake : MonoBehaviour
             gridPosition = levelGrid.ValidateGridPosition(gridPosition);
 
             bool snakeAteFood = levelGrid.TrySnakeEatFood(gridPosition);
+            bool snakeAteBurnFood = levelGrid.TrySnakeEatBurnFood(gridPosition);
             if (snakeAteFood)
             {
                 snakeBodySize++;
                 CreateSnakeBody();
+                SoundManager.PlaySound(SoundManager.Sound.SnakeEat);
+            }
+            if (snakeAteBurnFood)
+            {
+                snakeBodySize--;
+                RemoveSnakeBody();
+                SoundManager.PlaySound(SoundManager.Sound.SnakeEat);
             }
 
             if (snakeMovePositionList.Count >= snakeBodySize + 1)
@@ -109,6 +118,7 @@ public class Snake : MonoBehaviour
                 {
                     state = State.Dead;
                     GameHandler.SnakeDied();
+                    SoundManager.PlaySound(SoundManager.Sound.SnakeDie);
                 }
             }
             transform.position = new Vector3(gridPosition.x, gridPosition.y);
@@ -118,6 +128,11 @@ public class Snake : MonoBehaviour
     private void CreateSnakeBody()
     {
         snakeBodyPartList.Add(new SnakeBodyPart(snakeBodyPartList.Count));
+    }
+    private void RemoveSnakeBody()
+    {
+        Destroy(snakeBodyPartList[snakeBodyPartList.Count - 1].snakeBodyGameObject);
+        snakeBodyPartList.RemoveAt(snakeBodyPartList.Count - 1);
     }
     private void UpdateSnakeBodyParts()
     {
@@ -180,9 +195,10 @@ public class Snake : MonoBehaviour
     {
         private Transform transform;
         private SnakeMovePosition snakeMovePosition;
+        public GameObject snakeBodyGameObject;
         public SnakeBodyPart(int bodyIndex)
         {
-            GameObject snakeBodyGameObject = new GameObject("SnakeBody", typeof(SpriteRenderer));
+            snakeBodyGameObject = new GameObject("SnakeBody", typeof(SpriteRenderer));
             snakeBodyGameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.i.snakeBodySprite;
             snakeBodyGameObject.GetComponent<SpriteRenderer>().sortingOrder = -bodyIndex;
             transform = snakeBodyGameObject.transform;
