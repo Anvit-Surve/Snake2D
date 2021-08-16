@@ -7,6 +7,7 @@ public class HighScore
 {
     public static event EventHandler OnHighscoreChanged;
     private static int score;
+    public static bool ScoreBoost = false;
     public static void InitialiseStatic()
     {
         OnHighscoreChanged = null;
@@ -18,7 +19,11 @@ public class HighScore
     }
     public static void AddScore()
     {
-        score += 100;
+        if (ScoreBoost)
+        {
+            score += 200;
+        }
+        else { score += 100; }
     }
     public static void SubtractScore()
     {

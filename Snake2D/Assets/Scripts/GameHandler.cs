@@ -7,7 +7,8 @@ public class GameHandler : MonoBehaviour
     private static GameHandler instance;
     [SerializeField]
     private Snake snake;
-    private LevelGrid levelGrid;
+    [SerializeField]
+    private FoodSpawner foodSpawner;
     private void Awake()
     {
         instance = this;
@@ -15,12 +16,6 @@ public class GameHandler : MonoBehaviour
         Time.timeScale = 1f;
         PlayerPrefs.SetInt("highscore", 100);
         PlayerPrefs.Save();
-    }
-    void Start()
-    {
-        levelGrid = new LevelGrid(20, 20);
-        snake.Setup(levelGrid);
-        levelGrid.Setup(snake);
     }
     private void Update()
     {

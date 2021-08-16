@@ -11,7 +11,6 @@ public class Snake : MonoBehaviour
         Up,
         Down
     }
-
     private enum State
     {
         Alive,
@@ -23,16 +22,22 @@ public class Snake : MonoBehaviour
     private float gridMoveTimer;
     public int speed;
     private float gridMoveTimerMax;
-    private LevelGrid levelGrid;
-    private int snakeBodySize;
+    public int snakeBodySize;
+    private int width;
+    private int height;
+
+    [HideInInspector] public bool burnFood = false;
+    [HideInInspector] public bool shield = false;
+
+    [SerializeField] private FoodSpawner foodSpawner;
+    [SerializeField] private PowerUpSpawner powerUpSpawner;
+
     private List<SnakeMovePosition> snakeMovePositionList;
     private List<SnakeBodyPart> snakeBodyPartList;
-    public void Setup(LevelGrid levelGrid)
-    {
-        this.levelGrid = levelGrid;
-    }
     private void Awake()
     {
+        width = 20;
+        height = 20;
         gridPosition = new Vector2Int(10, 10);
         gridMoveTimerMax = 1f;
         gridMoveTimer = gridMoveTimerMax;
@@ -88,22 +93,24 @@ public class Snake : MonoBehaviour
             }
 
             gridPosition += gridMoveDirectionVector;
-            gridPosition = levelGrid.ValidateGridPosition(gridPosition);
+            gridPosition = ValidateGridPosition(gridPosition);
 
-            bool snakeAteFood = levelGrid.TrySnakeEatFood(gridPosition);
-            bool snakeAteBurnFood = levelGrid.TrySnakeEatBurnFood(gridPosition);
+            bool snakeAteFood = foodSpawner.SnakeEatFood(gridPosition);
             if (snakeAteFood)
             {
-                snakeBodySize++;
-                CreateSnakeBody();
                 SoundManager.PlaySound(SoundManager.Sound.SnakeEat);
+                if (burnFood)
+                {
+                    RemoveSnakeBody();
+                    snakeBodySize--;
+                }
+                else
+                {
+                    snakeBodySize++;
+                    CreateSnakeBody();
+                }
             }
-            if (snakeAteBurnFood)
-            {
-                snakeBodySize--;
-                RemoveSnakeBody();
-                SoundManager.PlaySound(SoundManager.Sound.SnakeEat);
-            }
+            bool snakePowerUp = powerUpSpawner.SnakeEatPowerUp(gridPosition);
 
             if (snakeMovePositionList.Count >= snakeBodySize + 1)
             {
@@ -116,14 +123,37 @@ public class Snake : MonoBehaviour
                 Vector2Int snakeBodyPartGridPosition = snakeBodyPart.GetGridPosition();
                 if (gridPosition == snakeBodyPartGridPosition)
                 {
-                    state = State.Dead;
-                    GameHandler.SnakeDied();
-                    SoundManager.PlaySound(SoundManager.Sound.SnakeDie);
+                    if (!shield)
+                    {
+                        state = State.Dead;
+                        GameHandler.SnakeDied();
+                        SoundManager.PlaySound(SoundManager.Sound.SnakeDie);
+                    }
                 }
             }
             transform.position = new Vector3(gridPosition.x, gridPosition.y);
             transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirectionVector) - 90);
         }
+    }
+    public Vector2Int ValidateGridPosition(Vector2Int gridPosition)
+    {
+        if (gridPosition.x < 0)
+        {
+            gridPosition.x = width;
+        }
+        if (gridPosition.x > width)
+        {
+            gridPosition.x = 0;
+        }
+        if (gridPosition.y < 0)
+        {
+            gridPosition.y = height;
+        }
+        if (gridPosition.y > height)
+        {
+            gridPosition.y = 0;
+        }
+        return gridPosition;
     }
     private void CreateSnakeBody()
     {
@@ -308,6 +338,10 @@ public class Snake : MonoBehaviour
                 return previousSnakeMovePosition.direction;
             }
         }
+    }
+    public int GetSnakeSize()
+    {
+        return snakeBodyPartList.Count;
     }
 }
 

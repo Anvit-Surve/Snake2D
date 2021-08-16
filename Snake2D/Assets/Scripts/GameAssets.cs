@@ -10,6 +10,9 @@ public class GameAssets : MonoBehaviour
     public Sprite snakeBodySprite;
     public Sprite foodSprite;
     public Sprite foodBurnSprite;
+    public Sprite Shield;
+    public Sprite SpeedBoost;
+    public Sprite ScoreBoost;
     public SoundAudioClip[] soundAudioClip;
 
     private void Awake()
