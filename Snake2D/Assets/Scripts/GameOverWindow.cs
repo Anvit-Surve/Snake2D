@@ -17,7 +17,7 @@ public class GameOverWindow : MonoBehaviour
     private void RetryGame()
     {
         SoundManager.PlaySound(SoundManager.Sound.ButtonClick);
-        Loader.Load(Loader.Scene.GameScene);
+        Loader.Load(Loader.Scene.SingleGameScene);
     }
     private void Show(bool isNewHighScore)
     {

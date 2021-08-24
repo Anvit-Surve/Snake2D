@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
-    public void PlayGame()
+    public void PlaySinglePlayerGame()
     {
         SoundManager.PlaySound(SoundManager.Sound.ButtonClick);
-        Loader.Load(Loader.Scene.GameScene);
+        Loader.Load(Loader.Scene.SingleGameScene);
+    }
+    public void PlayCOopPlayerGame()
+    {
+        SoundManager.PlaySound(SoundManager.Sound.ButtonClick);
+        Loader.Load(Loader.Scene.COopGameScene);
     }
     public void QuitGame()
     {

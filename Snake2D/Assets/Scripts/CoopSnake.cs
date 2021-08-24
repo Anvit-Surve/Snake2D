@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Snake : MonoBehaviour
+public class CoopSnake : MonoBehaviour
 {
     private enum Direction
     {
@@ -23,8 +23,9 @@ public class Snake : MonoBehaviour
     public int speed;
     private float gridMoveTimerMax;
     public int snakeBodySize;
-    public int position_x = 10;
-    public int position_y = 10;
+    public bool SpawnObjects;
+    public int position_x;
+    public int position_y;
     private int width;
     private int height;
 
@@ -56,6 +57,7 @@ public class Snake : MonoBehaviour
             case State.Alive:
                 HandleInput();
                 HandleGridMovement();
+                //HandleDeathCondition();
                 break;
             case State.Dead:
                 break;
@@ -181,28 +183,28 @@ public class Snake : MonoBehaviour
     }
     private void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             if (gridMoveDirection != Direction.Down)
             {
                 gridMoveDirection = Direction.Up;
             }
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             if (gridMoveDirection != Direction.Up)
             {
                 gridMoveDirection = Direction.Down;
             }
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             if (gridMoveDirection != Direction.Right)
             {
                 gridMoveDirection = Direction.Left;
             }
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.D))
         {
             if (gridMoveDirection != Direction.Left)
             {
